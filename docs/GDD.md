@@ -254,7 +254,19 @@ States clear at the start of the relevant character's next turn unless extended 
 ## 8. Dungeon Structure
 
 ### Unmarked Descent
-There is no pre-revealed map. The dungeon is navigated junction by junction — at each point the party reaches a split and the player chooses between **2–3 passages**. Each passage has an environmental description: sounds, smells, visual detail visible from the threshold. These descriptions hint at what lies ahead, but never guarantee it. The deeper the party goes, the less reliable the clues become.
+There is no pre-revealed map. The dungeon is navigated junction by junction — at each point the party reaches a split and the player chooses between **2–3 passages**.
+
+Choosing a passage commits the party to a **linear corridor of rooms** — typically 2–4 rooms in sequence — before the next junction is reached. There is no turning back mid-corridor and no branching within one. The party walks the chosen path to its end, then chooses again.
+
+Each passage is described through environmental detail — architecture, sound, air, light, texture — visible or perceptible from the threshold. These descriptions communicate the **character of the area ahead**, not just the immediate next room. A passage might suggest recent habitation, signs of conflict, or a particular wrongness that an experienced player learns to associate with certain room types. The information is real but imprecise: a player cannot know exactly what the next room holds, but can develop a sense of what the coming stretch of dungeon is likely to contain.
+
+Hints operate at two scales:
+- **Area texture** — the broader character of several rooms ahead (e.g. signs of habitation, a smell of trade, stillness that suggests abandonment)
+- **Immediate signal** — something closer, suggesting the nature of the next room specifically (e.g. the sound of movement, a glow under a door)
+
+Players are not told what either scale means. Fluency is earned across runs.
+
+**Depth and reliability:** In depth 1, hints are consistent enough to learn from. As the dungeon deepens, its wrong logic begins to corrupt the signals — not as a game mechanic withholding information, but because the dungeon itself no longer follows coherent rules. By depth 3+, a hint may describe something that no longer maps cleanly onto any room type. The fiction and the mechanic degrade together.
 
 The player never sees the full structure of a depth. They learn to read the dungeon, not a UI panel.
 

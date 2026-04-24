@@ -9,8 +9,8 @@
 - [x] Git + GitHub set up
 - [ ] GDD complete enough to start M1
 - [ ] Folder structure created
-- [ ] GUT addon installed
-- [ ] CLAUDE.md written
+- [x] GUT addon installed
+- [x] CLAUDE.md written
 
 ## M1 — Core Loop Playable (no art)
 - [ ] One card can be played

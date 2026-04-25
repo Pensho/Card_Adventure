@@ -13,6 +13,14 @@ enum State {
 
 const HAND_SIZE: int = 5
 
+# Item paths available as post-combat loot drops.
+const _LOOT_POOL: Array[String] = [
+	"res://data/items/lancer_iron_lance.tres",
+	"res://data/items/lancer_battered_shield.tres",
+	"res://data/items/jester_motley_blade.tres",
+	"res://data/items/jester_bells.tres",
+]
+
 var current_state: State = State.INITIALIZING
 var _return_state: State = State.PLAYER_TURN
 var _victory: bool = false
@@ -28,7 +36,6 @@ var _selected_target: Object
 func _ready() -> void:
 	_hud.end_turn_pressed.connect(_on_end_turn)
 	_hud.card_selected.connect(_on_card_selected)
-	_hud.restart_requested.connect(_on_restart)
 	_transition(State.INITIALIZING)
 
 
@@ -46,11 +53,25 @@ func _transition(new_state: State) -> void:
 
 
 func _enter_initializing() -> void:
-	_active_character = CharacterData.new()
-	_active_character.character_id = "lancer"
-	_active_character.character_name = "Lancer"
-	_active_character.max_hp = 50
-	_active_character.current_hp = 50
+	if GameState.party.is_empty():
+		# Fallback for direct scene launch during development.
+		var lancer := CharacterData.new()
+		lancer.character_id = "lancer"
+		lancer.character_name = "Lancer"
+		lancer.max_hp = 50
+		lancer.current_hp = 50
+		var card := CardData.new()
+		card.card_name = "Lance Strike"
+		card.description = "Deal 6 damage."
+		card.toll_type = CardData.TollType.FREE
+		var effect := DamageEffect.new()
+		effect.value = 6
+		card.effects.append(effect)
+		GameState.start_combat([lancer], [card, card, card, card, card])
+	else:
+		GameState.start_combat(GameState.party, GameState.deck)
+
+	_active_character = GameState.party[0]
 
 	_enemy = EnemyCombatData.new()
 	_enemy.enemy_name = "Shambling Mass"
@@ -59,19 +80,6 @@ func _enter_initializing() -> void:
 	_enemy.intent_type = EnemyCombatData.IntentType.ATTACK
 	_enemy.intent_value = 8
 
-	var deck: Array[CardData] = []
-	for i in 5:
-		var card := CardData.new()
-		card.card_name = "Lance Strike"
-		card.description = "Deal 6 damage."
-		card.toll_type = CardData.TollType.FREE
-		var effect := DamageEffect.new()
-		effect.value = 6
-		card.effects.append(effect)
-		deck.append(card)
-
-	var party: Array[CharacterData] = [_active_character]
-	GameState.start_combat(party, deck)
 	_hud.refresh_character(_active_character)
 	_hud.refresh_enemy(_enemy)
 	_transition(State.ROUND_START)
@@ -128,7 +136,12 @@ func _process_next_enemy() -> void:
 
 
 func _enter_combat_over() -> void:
-	_hud.show_outcome(_victory)
+	_hud.set_player_input_enabled(false)
+	if _victory:
+		_generate_loot()
+		SceneManager.go_to("res://scenes/ui/EquipmentScreen.tscn")
+	else:
+		SceneManager.go_to("res://scenes/ui/GameOver.tscn", {"victory": false})
 
 
 func _check_outcome() -> void:
@@ -136,7 +149,12 @@ func _check_outcome() -> void:
 		_victory = true
 		_transition(State.COMBAT_OVER)
 		return
-	if _active_character.is_downed():
+	var all_downed := true
+	for character: CharacterData in GameState.party:
+		if not character.is_downed():
+			all_downed = false
+			break
+	if all_downed:
 		_victory = false
 		_transition(State.COMBAT_OVER)
 		return
@@ -145,6 +163,19 @@ func _check_outcome() -> void:
 			_transition(State.PLAYER_TURN)
 		State.ENEMY_TURN:
 			_process_next_enemy()
+
+
+func _generate_loot() -> void:
+	GameState.pending_loot = []
+	var count: int = GameState.rng.randi_range(1, 2)
+	var available: Array[String] = _LOOT_POOL.duplicate()
+	for _i in count:
+		if available.is_empty():
+			break
+		var idx: int = GameState.rng.randi_range(0, available.size() - 1)
+		var path: String = available.pop_at(idx)
+		if ResourceLoader.exists(path):
+			GameState.pending_loot.append(load(path))
 
 
 func _on_end_turn() -> void:
@@ -158,7 +189,3 @@ func _on_card_selected(card: CardData) -> void:
 		return
 	_selected_card = card
 	_transition(State.TARGETING)
-
-
-func _on_restart() -> void:
-	get_tree().reload_current_scene()

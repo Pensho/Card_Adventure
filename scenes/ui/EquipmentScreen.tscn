@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/equipment_screen.gd" id="1"]
+
+[node name="EquipmentScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="MainVBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TitleLabel" type="Label" parent="MainVBox"]
+layout_mode = 2
+text = "Equipment"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="ContentRow" type="HBoxContainer" parent="MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CharacterSection" type="HBoxContainer" parent="MainVBox/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LootPanel" type="VBoxContainer" parent="MainVBox/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(200, 0)
+
+[node name="LootTitle" type="Label" parent="MainVBox/ContentRow/LootPanel"]
+layout_mode = 2
+text = "Loot"
+horizontal_alignment = 1
+
+[node name="LootContainer" type="VBoxContainer" parent="MainVBox/ContentRow/LootPanel"]
+layout_mode = 2
+
+[node name="DeckPanel" type="VBoxContainer" parent="MainVBox/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(200, 0)
+
+[node name="DeckTitle" type="Label" parent="MainVBox/ContentRow/DeckPanel"]
+layout_mode = 2
+text = "Deck"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainVBox/ContentRow/DeckPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DeckList" type="VBoxContainer" parent="MainVBox/ContentRow/DeckPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ContinueButton" type="Button" parent="MainVBox"]
+layout_mode = 2
+text = "Continue"
+
+[connection signal="pressed" from="MainVBox/ContinueButton" to="." method="_on_continue_button_pressed"]

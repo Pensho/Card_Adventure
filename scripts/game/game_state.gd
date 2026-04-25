@@ -3,6 +3,7 @@ extends Node
 signal hand_changed
 signal deck_changed
 signal character_hp_changed(character_id: String, new_hp: int)
+signal equipment_changed(character_id: String)
 
 var party: Array[CharacterData] = []
 var deck: Array[CardData] = []
@@ -12,6 +13,25 @@ var exhaust_pile: Array[CardData] = []
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var run_seed: int = 0
 
+# Dungeon state
+var current_depth: int = 1
+var corridor_rooms: Array[Dictionary] = []
+var room_index: int = 0
+var pending_loot: Array = []  # Array[ItemData]
+
+func start_run(characters: Array[CharacterData]) -> void:
+	party = characters
+	run_seed = rng.randi()
+	rng.seed = run_seed
+	current_depth = 1
+	corridor_rooms = []
+	room_index = 0
+	pending_loot = []
+	hand = []
+	discard_pile = []
+	exhaust_pile = []
+	_rebuild_deck()
+
 func start_combat(characters: Array[CharacterData], starting_deck: Array[CardData]) -> void:
 	party = characters
 	deck = starting_deck.duplicate()
@@ -19,6 +39,24 @@ func start_combat(characters: Array[CharacterData], starting_deck: Array[CardDat
 	discard_pile = []
 	exhaust_pile = []
 	_shuffle_deck()
+
+func equip_item(character: CharacterData, slot: int, item) -> void:
+	character.equipment[slot] = item
+	_rebuild_deck()
+	equipment_changed.emit(character.character_id)
+
+func unequip_item(character: CharacterData, slot: int) -> void:
+	character.equipment[slot] = null
+	_rebuild_deck()
+	equipment_changed.emit(character.character_id)
+
+func _rebuild_deck() -> void:
+	var all_cards: Array[CardData] = []
+	for character in party:
+		all_cards.append_array(character.get_all_cards())
+	deck = all_cards
+	_shuffle_deck()
+	deck_changed.emit()
 
 func draw_cards(count: int) -> void:
 	for i in count:

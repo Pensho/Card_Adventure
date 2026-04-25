@@ -1,6 +1,8 @@
 class_name CharacterData
 extends RefCounted
 
+const _ItemData = preload("res://scripts/data/item_data.gd")
+
 enum CharacterState {
 	NONE,
 	COILED,
@@ -18,6 +20,8 @@ var current_hp: int = 50
 var character_state: CharacterState = CharacterState.COILED
 var momentum: int = 0
 var performance: int = 0
+# Keys are ItemData.SlotType int values; values are ItemData or null.
+var equipment: Dictionary = {}
 
 func is_downed() -> bool:
 	return current_hp <= 0
@@ -38,3 +42,13 @@ func spend_momentum(amount: int) -> bool:
 		return false
 	momentum -= amount
 	return true
+
+func get_all_cards() -> Array[CardData]:
+	var result: Array[CardData] = []
+	for raw_item in equipment.values():
+		if raw_item == null:
+			continue
+		var item: _ItemData = raw_item
+		result.append_array(item.cards)
+		result.append_array(item.curse_cards)
+	return result

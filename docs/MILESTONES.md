@@ -22,10 +22,10 @@
 
 ## M2 — First Full Run
 - [ ] Multiple encounter rooms
-- [ ] Card acquisition between encounters
-- [ ] Basic deck management
-- [ ] Simple map / progression structure
-- [ ] Persistent run state
+- [ ] Equipment loot after encounters; equipping/unequipping rebuilds the deck
+- [ ] Equipment screen accessible at respite and merchant rooms
+- [ ] Dungeon junction navigation (unmarked descent: 2–3 passages, no pre-revealed map)
+- [ ] Persistent run state (autosave on room transition)
 
 ## M3 — Art Pass
 - [ ] Card illustrations via leonardo.ai
@@ -35,7 +35,7 @@
 
 ## M4 — Polish & Balance
 - [ ] Sound effects and music
-- [ ] Balance pass on card costs/effects
+- [ ] Balance pass on card tolls and effects
 - [ ] Main menu and game over screen
 - [ ] Save/load
 

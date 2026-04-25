@@ -1,5 +1,9 @@
 extends Node
 
+const SAVE_VERSION    := 1
+const SAVE_PATH       := "user://savegame.json"
+const PERSISTENT_PATH := "user://persistent.json"
+
 signal hand_changed
 signal deck_changed
 signal character_hp_changed(character_id: String, new_hp: int)
@@ -18,6 +22,9 @@ var current_depth: int = 1
 var corridor_rooms: Array[Dictionary] = []
 var room_index: int = 0
 var pending_loot: Array = []  # Array[ItemData]
+
+# Persistent cross-run state
+var unlocked_characters: Array[String] = ["lancer", "jester"]
 
 func start_run(characters: Array[CharacterData]) -> void:
 	party = characters
@@ -127,3 +134,119 @@ func _shuffle_deck() -> void:
 		var temp: CardData = deck[i]
 		deck[i] = deck[j]
 		deck[j] = temp
+
+
+# --- persistence ---
+
+func save_run() -> void:
+	var data := {
+		"version":        SAVE_VERSION,
+		"rng_seed":       rng.seed,
+		"rng_state":      rng.state,
+		"depth":          current_depth,
+		"corridor_rooms": corridor_rooms,
+		"room_index":     room_index,
+		"pending_loot":   _serialize_item_array(pending_loot),
+		"party":          _serialize_party(),
+	}
+	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data, "\t"))
+	file.close()
+
+
+func load_run() -> bool:
+	if not FileAccess.file_exists(SAVE_PATH):
+		return false
+	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var text := file.get_as_text()
+	file.close()
+	var parsed = JSON.parse_string(text)
+	if parsed == null:
+		return false
+	if not parsed.has("version") or parsed["version"] != SAVE_VERSION:
+		return false
+	rng.seed  = parsed["rng_seed"]
+	rng.state = parsed["rng_state"]
+	current_depth   = parsed["depth"]
+	corridor_rooms.assign(parsed["corridor_rooms"])
+	room_index      = parsed["room_index"]
+	pending_loot    = _deserialize_item_array(parsed["pending_loot"])
+	_deserialize_party(parsed["party"])
+	_rebuild_deck()
+	return true
+
+
+func clear_run() -> void:
+	if FileAccess.file_exists(SAVE_PATH):
+		var dir := DirAccess.open("user://")
+		dir.remove("savegame.json")
+
+
+func save_persistent() -> void:
+	var data := {
+		"version":              SAVE_VERSION,
+		"unlocked_characters":  unlocked_characters,
+	}
+	var file := FileAccess.open(PERSISTENT_PATH, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data, "\t"))
+	file.close()
+
+
+func load_persistent() -> void:
+	if not FileAccess.file_exists(PERSISTENT_PATH):
+		return
+	var file := FileAccess.open(PERSISTENT_PATH, FileAccess.READ)
+	var text := file.get_as_text()
+	file.close()
+	var parsed = JSON.parse_string(text)
+	if parsed == null or not parsed.has("version") or parsed["version"] != SAVE_VERSION:
+		return
+	unlocked_characters.assign(parsed["unlocked_characters"])
+
+
+func _serialize_party() -> Array:
+	var result := []
+	for pc: CharacterData in party:
+		var equip_data := {}
+		for slot in pc.equipment:
+			var item = pc.equipment[slot]
+			equip_data[str(slot)] = item.resource_path if item != null else ""
+		result.append({
+			"id":      pc.character_id,
+			"name":    pc.character_name,
+			"max_hp":  pc.max_hp,
+			"hp":      pc.current_hp,
+			"equipment": equip_data,
+		})
+	return result
+
+
+func _deserialize_party(data: Array) -> void:
+	party.clear()
+	for pc_data in data:
+		var pc := CharacterData.new()
+		pc.character_id   = pc_data["id"]
+		pc.character_name = pc_data["name"]
+		pc.max_hp         = pc_data["max_hp"]
+		pc.current_hp     = pc_data["hp"]
+		var equip: Dictionary = pc_data["equipment"]
+		for slot_str in equip:
+			var path: String = equip[slot_str]
+			pc.equipment[int(slot_str)] = load(path) if path != "" else null
+		party.append(pc)
+
+
+func _serialize_item_array(items: Array) -> Array:
+	var result := []
+	for item in items:
+		if item != null and item.resource_path != "":
+			result.append(item.resource_path)
+	return result
+
+
+func _deserialize_item_array(paths: Array) -> Array:
+	var result := []
+	for path in paths:
+		if path != null and path != "":
+			result.append(load(path))
+	return result

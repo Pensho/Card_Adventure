@@ -46,5 +46,7 @@ func _toll_text() -> String:
 			return "Cost: %d Momentum" % card_data.toll_value
 		CardData.TollType.DISCARD:
 			return "Discard %d" % card_data.toll_value
+		CardData.TollType.PERFORMANCE:
+			return "Cost: %d Performance" % card_data.toll_value
 		_:
 			return "Toll: %d" % card_data.toll_value

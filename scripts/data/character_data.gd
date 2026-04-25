@@ -43,6 +43,12 @@ func spend_momentum(amount: int) -> bool:
 	momentum -= amount
 	return true
 
+func spend_performance(amount: int) -> bool:
+	if performance < amount:
+		return false
+	performance -= amount
+	return true
+
 func get_all_cards() -> Array[CardData]:
 	var result: Array[CardData] = []
 	for raw_item in equipment.values():

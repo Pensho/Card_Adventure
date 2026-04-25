@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/item_data.gd" id="1"]
+[ext_resource type="Resource" path="res://data/cards/lancer_brace.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+item_id = "lancer_battered_shield"
+item_name = "Battered Shield"
+description = "Dented and scarred, but still holds."
+slot_type = 1
+rarity = 0
+cards = [ExtResource("2")]
+curse_cards = []

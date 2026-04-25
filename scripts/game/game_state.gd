@@ -89,6 +89,8 @@ func can_pay_toll(card: CardData, character: CharacterData) -> bool:
 			return character.current_hp >= card.toll_value
 		CardData.TollType.MOMENTUM:
 			return character.momentum >= card.toll_value
+		CardData.TollType.PERFORMANCE:
+			return character.performance >= card.toll_value
 		CardData.TollType.DISCARD:
 			return hand.size() > card.toll_value
 		_:
@@ -103,6 +105,8 @@ func pay_toll(card: CardData, character: CharacterData) -> void:
 			character_hp_changed.emit(character.character_id, character.current_hp)
 		CardData.TollType.MOMENTUM:
 			character.spend_momentum(card.toll_value)
+		CardData.TollType.PERFORMANCE:
+			character.spend_performance(card.toll_value)
 		CardData.TollType.DISCARD:
 			for _i in card.toll_value:
 				var candidates: Array[int] = []

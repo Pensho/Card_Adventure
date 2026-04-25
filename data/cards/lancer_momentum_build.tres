@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/momentum_build_effect.gd" id="2"]
+
+[sub_resource type="Resource" id="1"]
+script = ExtResource("2")
+value = 2
+
+[resource]
+script = ExtResource("1")
+card_name = "Momentum Build"
+description = "Gain 2 Momentum."
+toll_type = 0
+toll_value = 0
+effects = [SubResource("1")]
+is_curse = false
+character_class = "lancer"

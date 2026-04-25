@@ -15,6 +15,7 @@ var card_data: CardData:
 
 func _ready() -> void:
 	gui_input.connect(_on_gui_input)
+	_update_display()
 
 
 func set_input_enabled(enabled: bool) -> void:

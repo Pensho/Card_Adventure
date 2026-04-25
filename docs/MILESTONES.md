@@ -20,26 +20,42 @@
 - [x] Win/loss condition detected and shown
 - [x] GUT tests covering card logic and turn flow
 
-## M2 — First Full Run *(current)*
+## M2 — First Full Run *(complete)*
 - [x] Multiple encounter rooms
 - [x] Equipment loot after encounters; equipping/unequipping rebuilds the deck
-- [x] Equipment screen accessible at respite and merchant rooms
+- [x] Equipment screen accessible at respite rooms
 - [x] Dungeon junction navigation (unmarked descent: 2–3 passages, no pre-revealed map)
 - [x] Persistent run state (autosave on room transition)
+- [x] MainMenu with New Run / Continue; CharacterSelect; GameOver screens
 
-## M3 — Art Pass
+## M3 — Full Party Combat *(current)*
+- [ ] Both characters shown in HUD with individual HP and active state indicator (GDD §4, §9)
+- [ ] If a character is downed, their cards are removed from the deck for the rest of that fight (GDD §4)
+- [ ] Severed state: surviving character plays alone when ally is downed (GDD §4)
+- [ ] Multiple enemies per encounter; enemies act independently (GDD §8)
+- [ ] Targeting: player selects which enemy a card hits when multiple are present (TDD §20)
+- [ ] Core character states wired: Coiled, Wounded, Committed, Braced (GDD §4)
+- [ ] Performance generation: playing cards in sequence increments Performance; resets on end of turn (GDD §4 Jester)
+- [ ] Depth 1 Sentinel: flagged final encounter that triggers the victory condition on defeat (GDD §8)
+- [ ] Defeat clears save immediately so MainMenu never offers a broken Continue (TDD §11)
+
+## M4 — Art Pass
 - [ ] Card illustrations via leonardo.ai
+- [ ] Character and enemy portraits
 - [ ] UI styled
-- [ ] Background art
+- [ ] Background art per depth
 - [ ] Basic animations
 
-## M4 — Polish & Balance
-- [ ] Sound effects and music
+## M5 — Polish & Balance
+- [ ] Sound effects and music (AudioManager fully implemented)
 - [ ] Balance pass on card tolls and effects
-- [ ] Main menu and game over screen
-- [ ] Save/load
+- [ ] Credits / end screen
 
 ## Backlog (unscheduled)
 - Achievements
-- Multiple character classes
+- Rattled and Severed state full implementation
+- Revival items
+- Merchant rooms
+- Discovery rooms
+- Multiple character classes beyond Lancer and Jester
 - Online leaderboard

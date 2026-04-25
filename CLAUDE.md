@@ -54,6 +54,11 @@ res://
 ## Git
 
 - Commit messages: short imperative sentence, e.g. `Add card draw mechanic`
+- Commit messages: do not include any Co-Authored-By section
 - One logical change per commit
 - Do not commit `.godot/` or generated files
-- Commit messages: Do not include any Co-Authored-By section, and subsequent parts.
+
+## Keeping project docs current
+
+- After completing work, update `docs/MILESTONES.md`: mark finished items `[x]`, set the current milestone, and update the date
+- If a TDD or GDD decision changes during implementation, update the relevant doc before committing

@@ -1,24 +1,24 @@
 # Milestones — Card Adventure
 
-**Last updated:** 2026-04-22
+**Last updated:** 2026-04-25
 
 ---
 
-## M0 — Foundation *(current)*
+## M0 — Foundation *(complete)*
 - [x] Godot project initialised
 - [x] Git + GitHub set up
-- [ ] GDD complete enough to start M1
-- [ ] Folder structure created
+- [x] GDD complete enough to start M1
+- [x] Folder structure created
 - [x] GUT addon installed
 - [x] CLAUDE.md written
 
-## M1 — Core Loop Playable (no art)
-- [ ] One card can be played
-- [ ] Card has an effect on game state
-- [ ] One enemy with basic AI
-- [ ] Turn structure: player turn → enemy turn
-- [ ] Win/loss condition detected and shown
-- [ ] GUT tests covering card logic and turn flow
+## M1 — Core Loop Playable (no art) *(current)*
+- [x] One card can be played
+- [x] Card has an effect on game state
+- [x] One enemy with basic AI
+- [x] Turn structure: player turn → enemy turn
+- [x] Win/loss condition detected and shown
+- [x] GUT tests covering card logic and turn flow
 
 ## M2 — First Full Run
 - [ ] Multiple encounter rooms

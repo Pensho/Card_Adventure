@@ -56,3 +56,4 @@ res://
 - Commit messages: short imperative sentence, e.g. `Add card draw mechanic`
 - One logical change per commit
 - Do not commit `.godot/` or generated files
+- Commit messages: Do not include any Co-Authored-By section, and subsequent parts.

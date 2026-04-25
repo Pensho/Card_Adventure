@@ -1,0 +1,103 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="1"]
+
+[node name="HUD" type="Control"]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TopBar" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="PartyPanel" type="VBoxContainer" parent="VBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CharNameLabel" type="Label" parent="VBox/TopBar/PartyPanel"]
+layout_mode = 2
+text = "Character"
+
+[node name="CharHPLabel" type="Label" parent="VBox/TopBar/PartyPanel"]
+layout_mode = 2
+text = "HP: --"
+
+[node name="Spacer" type="Control" parent="VBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnemyPanel" type="VBoxContainer" parent="VBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnemyNameLabel" type="Label" parent="VBox/TopBar/EnemyPanel"]
+layout_mode = 2
+text = "Enemy"
+horizontal_alignment = 2
+
+[node name="EnemyHPLabel" type="Label" parent="VBox/TopBar/EnemyPanel"]
+layout_mode = 2
+text = "HP: --"
+horizontal_alignment = 2
+
+[node name="EnemyIntentLabel" type="Label" parent="VBox/TopBar/EnemyPanel"]
+layout_mode = 2
+text = "Intent: --"
+horizontal_alignment = 2
+
+[node name="VSpacer" type="Control" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HandContainer" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="BottomBar" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="DeckLabel" type="Label" parent="VBox/BottomBar"]
+layout_mode = 2
+text = "Deck: 0"
+size_flags_horizontal = 3
+
+[node name="DiscardLabel" type="Label" parent="VBox/BottomBar"]
+layout_mode = 2
+text = "Discard: 0"
+size_flags_horizontal = 3
+
+[node name="EndTurnButton" type="Button" parent="VBox/BottomBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(120, 0)
+text = "End Turn"
+
+[node name="OutcomeLayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="OutcomePanel" type="PanelContainer" parent="OutcomeLayer"]
+layout_mode = 1
+anchor_left = 0.25
+anchor_top = 0.3
+anchor_right = 0.75
+anchor_bottom = 0.7
+
+[node name="VBox" type="VBoxContainer" parent="OutcomeLayer/OutcomePanel"]
+layout_mode = 2
+alignment = 1
+
+[node name="OutcomeLabel" type="Label" parent="OutcomeLayer/OutcomePanel/VBox"]
+layout_mode = 2
+text = "Victory!"
+horizontal_alignment = 1
+size_flags_horizontal = 3
+
+[node name="RestartButton" type="Button" parent="OutcomeLayer/OutcomePanel/VBox"]
+layout_mode = 2
+text = "Play Again"
+size_flags_horizontal = 3

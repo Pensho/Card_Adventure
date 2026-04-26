@@ -38,7 +38,10 @@ func _go_to_room() -> void:
 	var room: Dictionary = GameState.corridor_rooms[GameState.room_index]
 	match room["type"]:
 		"ENCOUNTER":
-			SceneManager.go_to("res://scenes/game/Battle.tscn")
+			SceneManager.go_to("res://scenes/game/Battle.tscn", {
+				"enemies": room["enemies"],
+				"is_sentinel": room.get("is_sentinel", false),
+			})
 		"RESPITE":
 			SceneManager.go_to("res://scenes/ui/Respite.tscn")
 		"EMPTY":

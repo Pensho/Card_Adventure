@@ -8,7 +8,8 @@ func _ready() -> void:
 	var victory: bool = SceneManager.incoming_data.get("victory", false)
 	if victory:
 		outcome_label.text = "The dungeon retreats."
-		detail_label.text = "Depth %d cleared." % GameState.current_depth
+		var cleared: int = SceneManager.incoming_data.get("completed_depth", GameState.current_depth - 1)
+		detail_label.text = "Depth %d cleared." % cleared
 	else:
 		outcome_label.text = "The dungeon claims another."
 		detail_label.text = "Reached depth %d." % GameState.current_depth

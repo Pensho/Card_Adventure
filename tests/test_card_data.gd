@@ -122,3 +122,72 @@ func test_enemy_downed_when_hp_reaches_zero() -> void:
 	enemy.current_hp = 5
 	enemy.receive_damage(5)
 	assert_true(enemy.is_downed())
+
+
+func test_card_data_aggressive_defaults_false() -> void:
+	var card := CardData.new()
+	assert_false(card.is_aggressive)
+
+
+func test_card_data_defensive_defaults_false() -> void:
+	var card := CardData.new()
+	assert_false(card.is_defensive)
+
+
+func test_add_performance_increases_performance() -> void:
+	var character := CharacterData.new()
+	character.performance = 0
+	character.add_performance(2)
+	assert_eq(character.performance, 2)
+
+
+func test_braced_reduces_next_damage_hit() -> void:
+	var character := CharacterData.new()
+	character.max_hp = 50
+	character.current_hp = 50
+	character.character_state = CharacterData.CharacterState.BRACED
+	character.receive_damage(8)
+	assert_eq(character.current_hp, 47)
+
+
+func test_braced_clears_after_hit() -> void:
+	var character := CharacterData.new()
+	character.current_hp = 50
+	character.character_state = CharacterData.CharacterState.BRACED
+	character.receive_damage(8)
+	assert_ne(character.character_state, CharacterData.CharacterState.BRACED)
+
+
+func test_braced_absorbs_full_small_hit() -> void:
+	var character := CharacterData.new()
+	character.max_hp = 50
+	character.current_hp = 50
+	character.character_state = CharacterData.CharacterState.BRACED
+	character.receive_damage(3)
+	assert_eq(character.current_hp, 50)
+	assert_ne(character.character_state, CharacterData.CharacterState.BRACED)
+
+
+func test_unbraced_takes_full_damage() -> void:
+	var character := CharacterData.new()
+	character.max_hp = 50
+	character.current_hp = 50
+	character.character_state = CharacterData.CharacterState.NONE
+	character.receive_damage(8)
+	assert_eq(character.current_hp, 42)
+
+
+func test_enemy_array_all_downed_is_true() -> void:
+	var e1 := EnemyCombatData.new()
+	var e2 := EnemyCombatData.new()
+	e1.current_hp = 0
+	e2.current_hp = 0
+	assert_true(e1.is_downed() and e2.is_downed())
+
+
+func test_enemy_array_partial_downed_is_false() -> void:
+	var e1 := EnemyCombatData.new()
+	var e2 := EnemyCombatData.new()
+	e1.current_hp = 0
+	e2.current_hp = 10
+	assert_false(e1.is_downed() and e2.is_downed())

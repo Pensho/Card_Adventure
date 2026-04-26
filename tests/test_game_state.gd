@@ -269,3 +269,172 @@ func test_rebuild_deck_aggregates_two_characters() -> void:
 	_state.equip_item(pc_a, ItemData.SlotType.WEAPON, _make_item("sword", ["Strike"]))
 	_state.equip_item(pc_b, ItemData.SlotType.WEAPON, _make_item("blade", ["Jab", "Flourish"]))
 	assert_eq(_state.deck.size(), 3)
+
+
+# --- character state transitions ---
+
+func test_playing_aggressive_card_sets_committed() -> void:
+	var card := _make_card("Strike")
+	card.is_aggressive = true
+	var pc := _make_character()
+	pc.character_state = CharacterData.CharacterState.NONE
+	var chars: Array[CharacterData] = [pc]
+	var empty: Array[CardData] = []
+	_state.start_combat(chars, empty)
+	_state.hand.append(card)
+	_state.play_card(card, pc, null)
+	assert_eq(pc.character_state, CharacterData.CharacterState.COMMITTED)
+
+
+func test_playing_defensive_card_sets_braced() -> void:
+	var card := _make_card("Guard")
+	card.is_defensive = true
+	var pc := _make_character()
+	pc.character_state = CharacterData.CharacterState.NONE
+	var chars: Array[CharacterData] = [pc]
+	var empty: Array[CardData] = []
+	_state.start_combat(chars, empty)
+	_state.hand.append(card)
+	_state.play_card(card, pc, null)
+	assert_eq(pc.character_state, CharacterData.CharacterState.BRACED)
+
+
+func test_playing_neutral_card_does_not_change_state() -> void:
+	var card := _make_card("Draw")
+	var pc := _make_character()
+	pc.character_state = CharacterData.CharacterState.WOUNDED
+	var chars: Array[CharacterData] = [pc]
+	var empty: Array[CardData] = []
+	_state.start_combat(chars, empty)
+	_state.hand.append(card)
+	_state.play_card(card, pc, null)
+	assert_eq(pc.character_state, CharacterData.CharacterState.WOUNDED)
+
+
+# --- COILED toll discount ---
+
+func _make_coiled_character(hp: int = 50) -> CharacterData:
+	var pc := _make_character(hp)
+	pc.character_state = CharacterData.CharacterState.COILED
+	return pc
+
+
+func test_coiled_reduces_momentum_toll_by_one() -> void:
+	var card := _make_card("Charge", CardData.TollType.MOMENTUM)
+	card.toll_value = 2
+	var pc := _make_coiled_character()
+	pc.momentum = 1
+	assert_false(_state.can_pay_toll(card, _make_character()))  # baseline: 1 < 2
+	assert_true(_state.can_pay_toll(card, pc))  # COILED: 1 >= 2-1
+
+
+func test_coiled_does_not_reduce_performance_toll() -> void:
+	var card := _make_card("Curtain Call", CardData.TollType.PERFORMANCE)
+	card.toll_value = 1
+	var pc := _make_coiled_character()
+	pc.performance = 0
+	assert_false(_state.can_pay_toll(card, pc))  # COILED does not discount Performance
+
+
+func test_coiled_discount_only_applies_once() -> void:
+	var card := _make_card("Charge", CardData.TollType.MOMENTUM)
+	card.toll_value = 2
+	var pc := _make_coiled_character()
+	pc.momentum = 1
+	var chars: Array[CharacterData] = [pc]
+	var empty: Array[CardData] = []
+	_state.start_combat(chars, empty)
+	_state.hand.append(card)
+	_state.play_card(card, pc, null)
+	# COILED is cleared; now playing again at full cost should fail
+	var card2 := _make_card("Charge2", CardData.TollType.MOMENTUM)
+	card2.toll_value = 2
+	_state.hand.append(card2)
+	_state.play_card(card2, pc, null)
+	assert_eq(_state.hand.size(), 1)  # card2 not played — still in hand
+
+
+func test_coiled_does_not_affect_free_toll() -> void:
+	var card := _make_card("Jab", CardData.TollType.FREE)
+	var pc := _make_coiled_character()
+	assert_true(_state.can_pay_toll(card, pc))
+
+
+func test_coiled_cleared_after_first_play() -> void:
+	var card := _make_card("Jab", CardData.TollType.FREE)
+	var pc := _make_coiled_character()
+	var chars: Array[CharacterData] = [pc]
+	var empty: Array[CardData] = []
+	_state.start_combat(chars, empty)
+	_state.hand.append(card)
+	_state.play_card(card, pc, null)
+	assert_ne(pc.character_state, CharacterData.CharacterState.COILED)
+
+
+# --- deck purge on character downed ---
+
+func _make_character_with_class(id: String, hp: int = 50) -> CharacterData:
+	var pc := _make_character(hp)
+	pc.character_id = id
+	return pc
+
+
+func _make_card_for_class(card_name: String, class_id: String) -> CardData:
+	var card := _make_card(card_name)
+	card.character_class = class_id
+	return card
+
+
+func test_remove_downed_character_cards_from_deck() -> void:
+	var pc_a := _make_character_with_class("lancer")
+	var pc_b := _make_character_with_class("jester")
+	var chars: Array[CharacterData] = [pc_a, pc_b]
+	var cards: Array[CardData] = [
+		_make_card_for_class("Strike", "lancer"),
+		_make_card_for_class("Jab", "jester"),
+		_make_card_for_class("Charge", "lancer"),
+	]
+	_state.start_combat(chars, cards)
+	_state.remove_character_cards_from_combat(pc_a)
+	for card: CardData in _state.deck:
+		assert_ne(card.character_class, "lancer")
+
+
+func test_remove_downed_character_cards_from_hand() -> void:
+	var pc_a := _make_character_with_class("lancer")
+	var pc_b := _make_character_with_class("jester")
+	var chars: Array[CharacterData] = [pc_a, pc_b]
+	var empty: Array[CardData] = []
+	_state.start_combat(chars, empty)
+	_state.hand.append(_make_card_for_class("Strike", "lancer"))
+	_state.hand.append(_make_card_for_class("Jab", "jester"))
+	_state.remove_character_cards_from_combat(pc_a)
+	for card: CardData in _state.hand:
+		assert_ne(card.character_class, "lancer")
+
+
+func test_remove_downed_character_cards_from_discard() -> void:
+	var pc_a := _make_character_with_class("lancer")
+	var chars: Array[CharacterData] = [pc_a]
+	var empty: Array[CardData] = []
+	_state.start_combat(chars, empty)
+	_state.discard_pile.append(_make_card_for_class("Strike", "lancer"))
+	_state.discard_pile.append(_make_card_for_class("Jab", "jester"))
+	_state.remove_character_cards_from_combat(pc_a)
+	for card: CardData in _state.discard_pile:
+		assert_ne(card.character_class, "lancer")
+
+
+func test_surviving_character_cards_unaffected() -> void:
+	var pc_a := _make_character_with_class("lancer")
+	var pc_b := _make_character_with_class("jester")
+	var chars: Array[CharacterData] = [pc_a, pc_b]
+	var jester_card := _make_card_for_class("Jab", "jester")
+	var cards: Array[CardData] = [jester_card]
+	_state.start_combat(chars, cards)
+	_state.remove_character_cards_from_combat(pc_a)
+	var found := false
+	for card: CardData in _state.deck:
+		if card.character_class == "jester":
+			found = true
+	assert_true(found)

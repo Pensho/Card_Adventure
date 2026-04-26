@@ -17,7 +17,7 @@ var character_id: String = ""
 var character_name: String = ""
 var max_hp: int = 50
 var current_hp: int = 50
-var character_state: CharacterState = CharacterState.COILED
+var character_state: CharacterState = CharacterState.NONE
 var momentum: int = 0
 var performance: int = 0
 # Keys are ItemData.SlotType int values; values are ItemData or null.
@@ -26,7 +26,12 @@ var equipment: Dictionary = {}
 func is_downed() -> bool:
 	return current_hp <= 0
 
+const BRACE_REDUCTION := 5
+
 func receive_damage(amount: int) -> void:
+	if character_state == CharacterState.BRACED:
+		amount = max(0, amount - BRACE_REDUCTION)
+		character_state = CharacterState.NONE
 	current_hp = max(0, current_hp - amount)
 	if amount > 0 and not is_downed():
 		character_state = CharacterState.WOUNDED
@@ -42,6 +47,9 @@ func spend_momentum(amount: int) -> bool:
 		return false
 	momentum -= amount
 	return true
+
+func add_performance(amount: int) -> void:
+	performance += amount
 
 func spend_performance(amount: int) -> bool:
 	if performance < amount:

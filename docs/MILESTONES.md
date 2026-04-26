@@ -1,6 +1,6 @@
 # Milestones — Card Adventure
 
-**Last updated:** 2026-04-25
+**Last updated:** 2026-04-26
 
 ---
 
@@ -28,16 +28,16 @@
 - [x] Persistent run state (autosave on room transition)
 - [x] MainMenu with New Run / Continue; CharacterSelect; GameOver screens
 
-## M3 — Full Party Combat *(current)*
-- [ ] Both characters shown in HUD with individual HP and active state indicator (GDD §4, §9)
-- [ ] If a character is downed, their cards are removed from the deck for the rest of that fight (GDD §4)
-- [ ] Severed state: surviving character plays alone when ally is downed (GDD §4)
-- [ ] Multiple enemies per encounter; enemies act independently (GDD §8)
-- [ ] Targeting: player selects which enemy a card hits when multiple are present (TDD §20)
-- [ ] Core character states wired: Coiled, Wounded, Committed, Braced (GDD §4)
-- [ ] Performance generation: playing cards in sequence increments Performance; resets on end of turn (GDD §4 Jester)
-- [ ] Depth 1 Sentinel: flagged final encounter that triggers the victory condition on defeat (GDD §8)
-- [ ] Defeat clears save immediately so MainMenu never offers a broken Continue (TDD §11)
+## M3 — Full Party Combat *(complete)*
+- [x] Both characters shown in HUD with individual HP and active state indicator (GDD §4, §9)
+- [x] If a character is downed, their cards are removed from the deck for the rest of that fight (GDD §4)
+- [x] Severed state: surviving character plays alone when ally is downed (GDD §4)
+- [x] Multiple enemies per encounter; enemies act independently (GDD §8)
+- [x] Targeting: player selects which enemy a card hits when multiple are present (TDD §20)
+- [x] Core character states wired: Coiled, Wounded, Committed, Braced (GDD §4)
+- [x] Performance generation: playing cards in sequence increments Performance; resets on end of turn (GDD §4 Jester)
+- [x] Depth 1 Sentinel: flagged final encounter that triggers the victory condition on defeat (GDD §8)
+- [x] Defeat clears save immediately so MainMenu never offers a broken Continue (TDD §11)
 
 ## M4 — Art Pass
 - [ ] Card illustrations via leonardo.ai

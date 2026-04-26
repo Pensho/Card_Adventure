@@ -16,3 +16,4 @@ toll_value = 2
 effects = [SubResource("1")]
 is_curse = false
 character_class = "lancer"
+is_aggressive = true

@@ -19,3 +19,5 @@ enum TollType {
 @export var effects: Array[CardEffect] = []
 @export var is_curse: bool = false
 @export var character_class: String = ""
+@export var is_aggressive: bool = false
+@export var is_defensive: bool = false

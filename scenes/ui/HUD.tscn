@@ -21,13 +21,9 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CharNameLabel" type="Label" parent="VBox/TopBar/PartyPanel"]
+[node name="PartyContainer" type="HBoxContainer" parent="VBox/TopBar/PartyPanel"]
 layout_mode = 2
-text = "Character"
-
-[node name="CharHPLabel" type="Label" parent="VBox/TopBar/PartyPanel"]
-layout_mode = 2
-text = "HP: --"
+size_flags_horizontal = 3
 
 [node name="Spacer" type="Control" parent="VBox/TopBar"]
 layout_mode = 2
@@ -37,20 +33,9 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="EnemyNameLabel" type="Label" parent="VBox/TopBar/EnemyPanel"]
+[node name="EnemyContainer" type="HBoxContainer" parent="VBox/TopBar/EnemyPanel"]
 layout_mode = 2
-text = "Enemy"
-horizontal_alignment = 2
-
-[node name="EnemyHPLabel" type="Label" parent="VBox/TopBar/EnemyPanel"]
-layout_mode = 2
-text = "HP: --"
-horizontal_alignment = 2
-
-[node name="EnemyIntentLabel" type="Label" parent="VBox/TopBar/EnemyPanel"]
-layout_mode = 2
-text = "Intent: --"
-horizontal_alignment = 2
+size_flags_horizontal = 3
 
 [node name="VSpacer" type="Control" parent="VBox"]
 layout_mode = 2
@@ -77,4 +62,3 @@ size_flags_horizontal = 3
 layout_mode = 2
 custom_minimum_size = Vector2(120, 0)
 text = "End Turn"
-

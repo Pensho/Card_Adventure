@@ -57,6 +57,18 @@ func unequip_item(character: CharacterData, slot: int) -> void:
 	_rebuild_deck()
 	equipment_changed.emit(character.character_id)
 
+func rebuild_deck() -> void:
+	_rebuild_deck()
+
+
+func remove_character_cards_from_combat(character: CharacterData) -> void:
+	deck = deck.filter(func(c: CardData) -> bool: return c.character_class != character.character_id)
+	hand = hand.filter(func(c: CardData) -> bool: return c.character_class != character.character_id)
+	discard_pile = discard_pile.filter(func(c: CardData) -> bool: return c.character_class != character.character_id)
+	hand_changed.emit()
+	deck_changed.emit()
+
+
 func _rebuild_deck() -> void:
 	var all_cards: Array[CardData] = []
 	for character in party:
@@ -81,32 +93,41 @@ func shuffle_discard_into_deck() -> void:
 	_shuffle_deck()
 	deck_changed.emit()
 
+func _coiled_toll(card: CardData, character: CharacterData) -> int:
+	if character.character_state == CharacterData.CharacterState.COILED:
+		match card.toll_type:
+			CardData.TollType.HP, CardData.TollType.MOMENTUM:
+				return max(0, card.toll_value - 1)
+	return card.toll_value
+
 func can_pay_toll(card: CardData, character: CharacterData) -> bool:
+	var toll: int = _coiled_toll(card, character)
 	match card.toll_type:
 		CardData.TollType.FREE:
 			return true
 		CardData.TollType.HP:
-			return character.current_hp >= card.toll_value
+			return character.current_hp >= toll
 		CardData.TollType.MOMENTUM:
-			return character.momentum >= card.toll_value
+			return character.momentum >= toll
 		CardData.TollType.PERFORMANCE:
-			return character.performance >= card.toll_value
+			return character.performance >= toll
 		CardData.TollType.DISCARD:
 			return hand.size() > card.toll_value
 		_:
 			return false
 
 func pay_toll(card: CardData, character: CharacterData) -> void:
+	var toll: int = _coiled_toll(card, character)
 	match card.toll_type:
 		CardData.TollType.FREE:
 			pass
 		CardData.TollType.HP:
-			character.receive_damage(card.toll_value)
+			character.receive_damage(toll)
 			character_hp_changed.emit(character.character_id, character.current_hp)
 		CardData.TollType.MOMENTUM:
-			character.spend_momentum(card.toll_value)
+			character.spend_momentum(toll)
 		CardData.TollType.PERFORMANCE:
-			character.spend_performance(card.toll_value)
+			character.spend_performance(toll)
 		CardData.TollType.DISCARD:
 			for _i in card.toll_value:
 				var candidates: Array[int] = []
@@ -126,9 +147,15 @@ func play_card(card: CardData, character: CharacterData, target: Object) -> void
 	if not can_pay_toll(card, character):
 		return
 	pay_toll(card, character)
+	if character.character_state == CharacterData.CharacterState.COILED:
+		character.character_state = CharacterData.CharacterState.NONE
 	hand.remove_at(hand.find(card))
 	for effect: CardEffect in card.effects:
 		effect.execute(character, target, self)
+	if card.is_aggressive:
+		character.character_state = CharacterData.CharacterState.COMMITTED
+	elif card.is_defensive:
+		character.character_state = CharacterData.CharacterState.BRACED
 	discard_pile.append(card)
 	hand_changed.emit()
 

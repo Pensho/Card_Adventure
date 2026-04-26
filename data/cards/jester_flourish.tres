@@ -20,3 +20,4 @@ toll_value = 0
 effects = [SubResource("1"), SubResource("2")]
 is_curse = false
 character_class = "jester"
+is_aggressive = true

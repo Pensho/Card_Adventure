@@ -32,5 +32,10 @@ layout_mode = 2
 text = "Continue"
 visible = false
 
+[node name="GlossaryButton" type="Button" parent="VBox"]
+layout_mode = 2
+text = "Glossary"
+
 [connection signal="pressed" from="VBox/NewRunButton" to="." method="_on_new_run_button_pressed"]
 [connection signal="pressed" from="VBox/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="VBox/GlossaryButton" to="." method="_on_glossary_button_pressed"]

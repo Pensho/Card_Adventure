@@ -134,4 +134,14 @@ Ideas that haven't been committed to. Each entry includes the appeal, the concer
 
 ---
 
-*Last updated: 2026-04-24*
+### In-game contextual glossary / mechanic unlocking
+
+**Appeal:** The current dev-only Glossary scene is a flat reference dump. Replacing it with contextual explanations that unlock as players encounter mechanics for the first time (first toll paid, first state triggered, first curse card drawn, etc.) would teach the game organically without a separate reference screen.
+
+**Concern:** Requires a discovery/unlock tracking system and per-trigger copy for each mechanic. Significant scope for what is currently a dev convenience.
+
+**Decision gate:** Design and scope after v1.0 ships and the discovery/event system is in place. The dev Glossary scene can be stripped from release builds or replaced at that point.
+
+---
+
+*Last updated: 2026-04-26*

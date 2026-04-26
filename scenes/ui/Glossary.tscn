@@ -1,0 +1,97 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/glossary.gd" id="1"]
+
+[node name="Glossary" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.05
+anchor_right = 0.9
+anchor_bottom = 0.95
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Glossary"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 28
+
+[node name="Scroll" type="ScrollContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Content" type="VBoxContainer" parent="VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TollHeader" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "Toll System"
+theme_override_font_sizes/font_size = 18
+
+[node name="TollBody" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "Cards have individual tolls instead of a shared energy counter. Each card states what must be paid to play it.\n\nToll types:\n  HP — pay life\n  Exhaust — remove another hand card from the game permanently\n  Discard — send a hand card to the discard pile\n  Wound — enter the Wounded state\n  Momentum — spend Momentum stacks (Lancer)\n  Performance — spend Performance stacks (Jester)\n  State — trigger a specific character state\n  Free — no cost (usually weak or situational)\n\nA card may demand combined tolls (e.g. 3 HP and become Committed). There is no per-turn card limit — play as many cards as you can afford the tolls for."
+autowrap_mode = 2
+
+[node name="CombatHeader" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "Combat Flow"
+theme_override_font_sizes/font_size = 18
+
+[node name="CombatBody" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "Each round: draw cards (~5 hand size) → play cards by paying tolls → enemy acts.\n\nThe deck is shared between both party members. States update as cards are played — playing an aggressive card makes a character Committed; taking damage makes them Wounded, and so on.\n\nIf a character is downed, their cards leave the deck for the remainder of that combat."
+autowrap_mode = 2
+
+[node name="StatesHeader" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "Character States"
+theme_override_font_sizes/font_size = 18
+
+[node name="StatesBody" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "States arise from play, not choice.\n\n  Coiled — Has not yet acted this turn. First card played costs one less toll.\n  Wounded — Took damage this turn. Some cards are weaker; Blood Mage cards are stronger.\n  Committed — Played an aggressive card. Enemy preferentially targets this character next turn.\n  Braced — Played a defensive card. Reduces the next incoming damage instance.\n  Rattled — Ally was downed or an enemy effect triggered it. Cards may misfire or cost an extra toll.\n  Severed — The other character is downed. Plays alone; some cards unavailable, others unlock."
+autowrap_mode = 2
+
+[node name="CharsHeader" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "Characters"
+theme_override_font_sizes/font_size = 18
+
+[node name="CharsBody" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "Lancer — Momentum stacks. Some cards build Momentum; others spend it for amplified effects. Being Committed with high Momentum unlocks the strongest Lancer moves, but draws enemy targeting.\n\nJester — Performance stacks. Built by playing cards in sequence (e.g. 3 cards in one turn triggers a Performance effect). At high Performance, cards upgrade temporarily or gain bonus effects. Missing the sequence resets the counter."
+autowrap_mode = 2
+
+[node name="EquipHeader" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "Equipment"
+theme_override_font_sizes/font_size = 18
+
+[node name="EquipBody" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "4 slots per character: Weapon, Off-hand, Armour, Accessory (8 active slots across the party). Equipping or unequipping an item immediately adds or removes its cards from the shared deck.\n\nTiers:\n  Standard — normal cards\n  Cursed — adds curse cards to the deck while equipped\n  Corrupted — stronger effects, unpredictable behaviour\n  Eldritch artefact — unusual or ambiguous tolls\n\nCurse cards are removed by unequipping the item, resting at a Respite, or paying a merchant to purge them."
+autowrap_mode = 2
+
+[node name="RevivalHeader" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "Revival"
+theme_override_font_sizes/font_size = 18
+
+[node name="RevivalBody" type="Label" parent="VBox/Scroll/Content"]
+layout_mode = 2
+text = "A downed character can be revived only if the party has a revival item equipped. The item's cost tier — Disabled, Damaged, or Destroyed — is baked into the item and determines how it is consumed on use.\n\nDestroying a cursed revival item removes its curse cards from the deck. This is an intentional escape valve for shedding a cursed item you cannot otherwise remove."
+autowrap_mode = 2
+
+[node name="BackButton" type="Button" parent="VBox"]
+layout_mode = 2
+text = "Back"
+
+[connection signal="pressed" from="VBox/BackButton" to="." method="_on_back_button_pressed"]
